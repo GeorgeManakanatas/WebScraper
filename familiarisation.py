@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+'''
+Playing around with a few examples to get the hang of the basics.
+'''
 import requests
 from bs4 import BeautifulSoup
 

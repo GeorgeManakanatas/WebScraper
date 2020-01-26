@@ -125,5 +125,4 @@ dmypy.json
 .pyre/
 
 # Results files
-theDrive.txt
-warZone.txt
+/output
