@@ -126,3 +126,6 @@ dmypy.json
 
 # Results files
 /output
+
+# Configuration files
+/config/config.json

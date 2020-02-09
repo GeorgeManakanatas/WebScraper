@@ -2,12 +2,12 @@ import logging
 import csv
 import requests
 import time
-from custom_logger import setup_custom_logger
+from logger.custom_logger import setup_custom_logger
 from bs4 import BeautifulSoup
 #
 logger = logging.getLogger('scraping')
 #
-def war_zone_map(file_path):
+def iterate_page_urls(file_path):
     # initialize the array
     articles_with_details = []
     # open the war zone file
@@ -19,14 +19,14 @@ def war_zone_map(file_path):
             # spacing the time
             time.sleep(20)
             logger.info('going after URL : %s',row['url'])
-            article_info = get_war_zone_article_details(row['url'])
+            article_info = page_article_details(row['url'])
             articles_with_details.append(article_info)
     #
     with open('output/new_file.txt', 'w') as my_file:
         for line in articles_with_details:
             my_file.write(line+'\n')
 
-def get_war_zone_article_details(article_url):
+def page_article_details(article_url):
     # request the url
     page = requests.get(article_url)
     logger.info('got page : %s',article_url)
