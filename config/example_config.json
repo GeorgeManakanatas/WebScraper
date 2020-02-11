@@ -1,0 +1,20 @@
+{   
+    "initialize_db":0,
+    "scrape_websites":1,
+    "scrape_sitemaps":0,
+    "scrape_pages":0,
+    "scrape_raw_data":0,
+    "postgresql_connection":{
+        "host":"127.0.0.1",
+        "port":"1234",
+        "dbname":"someName",
+        "user":"someUser",
+        "password":"somePassword"
+    },
+    "logging_configuration":{
+        "folder":"output/",
+        "filename":"scraping.log"
+    },
+    "robots_keywords":["Sitemap","Allow","Disallow","User-agent"],
+    "website_urls":["https://www.somewebsite.com","https://someotherwebsite.com","https://athirdwebsite.com"]
+}
