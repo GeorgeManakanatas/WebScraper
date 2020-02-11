@@ -22,8 +22,8 @@ if my_config.config_values['initialize_db']:
     interface.init_postgresql()
 
 if my_config.config_values['scrape_websites']:
-    page_urls = ['https://www.thedrive.com','https://medium.com','https://theintercept.com']
-    for url in page_urls:
+    # go through all websites
+    for url in my_config.config_values['website_urls']:
         logger.info('Looking at : %s',url)
         # Check the page is accessible
         page_content, page_found = get_page(url)
