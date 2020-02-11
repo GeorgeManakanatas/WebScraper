@@ -18,6 +18,7 @@ def get_sitemap_urls(robot_page_content, webpage_url):
     '''
     '''
     URL_REGULAR_EXPRESSION = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+    # TODO: fix this so it visits robots.txt direct and gets sitemaps with urllib.robotparser 
     # split the robots.txt in lines to start the process
     robot_lines = robot_page_content.splitlines()
     # go over all lines and build list of sitemaps

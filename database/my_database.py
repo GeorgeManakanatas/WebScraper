@@ -175,6 +175,13 @@ class PostgresqlInterface:
     
     def select_all_pages(self):
         '''
+        Function to get all page URLs from the database
+
+        Parameters:
+            None.
+        
+        Returns:
+            Boolean: The records, False if an exception is thrown
         '''
         SQL_GET_ALL_PAGES = "SELECT id, page_url FROM scraping_info.pages ;"
         try:

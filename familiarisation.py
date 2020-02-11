@@ -34,26 +34,6 @@ for city, url in cities_dict.items():
     info_dict[city] = day_dict
 
 print(info_dict)
-    # # getting the elements for today and the following two days 
-    # info_section_today = weather_soup.find('div', class_='today-daypart daypart-0  selected')
-    # info_section_tomorrow = weather_soup.find('div', class_='today-daypart daypart-1  selected')
-    # info_section_day_after = weather_soup.find('div', class_='today-daypart daypart-2  selected')
-    # # today
-    # today_precip = info_section_today.find('span', class_='precip-val')
-    # info_dict['today_precip'] = today_precip.find('span').getText()
-    # today_temp = info_section_today.find('div', class_='today-daypart-temp')
-    # info_dict['today_temp'] = today_temp.find('span').getText()
-    # # tomorrow 
-    # tomorrow_precip = info_section_tomorrow.find('span', class_='precip-val')
-    # info_dict['tomorrow_precip'] = tomorrow_precip.find('span').getText()
-    # tomorrow_temp = info_section_tomorrow.find('div', class_='today-daypart-temp')
-    # info_dict['tomorrow_temp'] = tomorrow_temp.find('span').getText()
-    # # the day after tommorow
-    # day_after_precip = info_section_day_after.find('span', class_='precip-val')
-    # info_dict['day_after_precip'] = day_after_precip.find('span').getText()
-    # day_after_temp = info_section_day_after.find('div', class_='today-daypart-temp')
-    # info_dict['day_after_temp'] = day_after_temp.find('span').getText()
-
 
 # page = requests.get("http://dataquestio.github.io/web-scraping-pages/simple.html")
 # # getting page and contents

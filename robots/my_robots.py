@@ -54,8 +54,8 @@ def get_page(page_url):
         page_url (str): The page url
     
     Returns:
-        Str: The page contnets if return code is 200
-        Bool: False for any other code or missing code
+        Str: The page contnets or null
+        Bool : True if code is 200, False if anythong else
     '''
     #
     logger.info('Checking access for page : %s',page_url)
@@ -67,26 +67,9 @@ def get_page(page_url):
         if robot_page.status_code == 200:
             logger.info('Return code 200 for : %s',page_url)
             robot_page_text = robot_page.content.decode()
-            return robot_page_text
+            return robot_page_text, True
         else:
             logger.warning('Retun code not 200 for : %s', page_url)
-            return False
+            return null, False
     except Exception as exc:
             logger.error('Error accessing the robots page: %s', exc)
-
-def save_main_webpage(robot_page_content, page_url):
-    '''
-    '''
-    if not robot_page_content:
-        # if check access False log error
-        logger.error('Error accessing the page: %s', page_url)
-        return False
-    else:
-        # get the keywords status
-        keyword_results = check_keywords(robot_page_content)
-        # store the entry to the websites table
-        try:
-            interface.insert_to_websites(website_url=page_url, has_robots_txt=True, has_sitemap_xml=keyword_results['Sitemap'])
-        except Exception as exc:
-            logger.error('Error saving website url to DB: %s', exc)
-        return True
