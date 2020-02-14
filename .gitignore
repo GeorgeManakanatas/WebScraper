@@ -125,7 +125,7 @@ dmypy.json
 .pyre/
 
 # Results files
-/output
+output/
 
 # Configuration files
 /config/config.json
