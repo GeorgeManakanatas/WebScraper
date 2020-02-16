@@ -20,19 +20,22 @@ class PostgresqlInterface:
                 
         '''
         try:
+            logger.info('postgresql connection : %s', my_config.config_values['postgresql_connection'])
             self.host = my_config.config_values['postgresql_connection']['host']
             self.schemaname = my_config.config_values['postgresql_connection']['schemaname']
             self.port = my_config.config_values['postgresql_connection']['port']
-            self.dbname = my_config.config_values['postgresql_connection']['dbname'].lower()
+            self.dbname = my_config.config_values['postgresql_connection']['dbname']
             self.user = my_config.config_values['postgresql_connection']['user']
             self.password = my_config.config_values['postgresql_connection']['password']
         except KeyError:
+            logger.info('postgresql connection key error : %s', my_config.config_values['postgresql_connection'])
             self.host = host
             self.schemaname = schemaname
             self.port = port
-            self.dbname = dbname.lower()
+            self.dbname = dbname
             self.user = user
             self.password = password
+
         # building the connection string
         self.CONN_STRING = 'host='+self.host+' port='+self.port+' dbname='+self.dbname+' user='+self.user+' password='+self.password
 
@@ -163,6 +166,28 @@ class PostgresqlInterface:
             logger.warning('Error selecting website urls : %s', exc)
             return False
 
+    def select_all_sitemaps(self):
+        '''
+        Function to get complete sitemap URLs
+
+        Parameters:
+            None
+        
+        Returns:
+            List , Bool: The records if success, False if an exception is thrown
+        '''
+        SQL_GET_ALL_SITEMAPS = "SELECT * FROM scraping_info.sitemaps;"
+        try:
+            conn = psycopg2.connect(self.CONN_STRING)    
+            cursor = conn.cursor()
+            cursor.execute(SQL_GET_ALL_SITEMAPS)
+            records = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            return records
+        except Exception as exc:
+            logger.warning('Error selecting website urls : %s', exc)
+            return False
 
     def insert_to_sitemaps(self, website_url_value, sitemap_url_value):
         '''

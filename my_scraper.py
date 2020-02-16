@@ -8,7 +8,7 @@ from robots.my_robots import get_page, check_content, check_keywords
 from database.my_database import PostgresqlInterface
 from config import my_config
 from logger.custom_logger import setup_custom_logger
-from sitemaps.my_sitemap import iterate_sitemap_urls, get_sitemap_urls
+from sitemaps.my_sitemap import iterate_sitemap_urls, get_all_sitemap_urls
 from pages.my_pages import iterate_page_urls
 
 # Reading config file into global variable
@@ -20,6 +20,7 @@ interface = PostgresqlInterface()
 
 if my_config.config_values['initialize_db']:
     interface.init_postgresql()
+
 
 if my_config.config_values['scrape_websites']:
     # go through all websites
@@ -41,33 +42,22 @@ if my_config.config_values['scrape_websites']:
         except Exception as exc:
             logger.error('Error saving website url to DB: %s', exc)
 
+
 if my_config.config_values['scrape_sitemaps']:
     # database call here to get list of all websites from DB
     website_info = interface.select_all_websites()
-    print('returned websites:: ',website_info)
     # if website info false
     if not website_info:
         logger.info('Not getting sitemap info, because website table not retrieved')
     else:
-        for web_url in website_info:
-            robots_web_url = web_url[1] + '/robots.txt'
-            logger.info('Getting robots.txt for : %s',robots_web_url) 
-            robot_page_content, robot_page_found = get_page(robots_web_url)
-            print(robot_page_content,'\n\n',robot_page_found)
-            # if robots page found
-            if not robot_page_found:
-                print('TADA!!!')
-                # get randomized sitemap urls from the robots.txt
-                sitemap_urls = get_sitemap_urls(robot_page_content, web_url)
-                # visiting each sitemap and gettign the article urls
-                logger.info('Visiting the sitemap urls')
-                # iterate_sitemap_urls(web_url,sitemap_urls)
-                # visiting each article and filling in the missing information
-                # iterate_page_urls('output/war_zone.txt')
-            else:
-                logger.info('Not getting sitemap info, because %s not retrieved',robots_web_url)
+        # look for new sitemap URLs and save them in databasee
+        new_urls_found = get_all_sitemap_urls(website_info)
+        # log the output
+        if new_urls_found: 
+            logger.info('New sitemap urls found')
+        else:
+            logger.info('No new sitemap urls')
 
-        
 
 if my_config.config_values['scrape_raw_data']:
     logger.info('Getting raw data')

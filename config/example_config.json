@@ -9,7 +9,8 @@
         "port":"1234",
         "dbname":"someName",
         "user":"someUser",
-        "password":"somePassword"
+        "password":"somePassword",
+        "schemaname":"someSchema"
     },
     "logging_configuration":{
         "folder":"output/",
