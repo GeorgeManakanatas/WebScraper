@@ -69,6 +69,7 @@ class PostgresqlInterface:
         #
         return True
 
+
     def insert_to_websites(self, website_url, **kwargs):
         '''
         Function to insert to websites table
@@ -118,6 +119,31 @@ class PostgresqlInterface:
             logger.warning('Error inserting to table website : %s', exc)
             return False
 
+
+    def select_all_websites(self):
+        '''
+        Function to get complete website table from the database
+
+        Parameters:
+            None.
+        
+        Returns:
+            List , Bool: The records if sucess, False if an exception is thrown
+        '''
+        SQL_GET_ALL_WEBSITES = "SELECT * FROM scraping_info.websites;"
+        try:
+            conn = psycopg2.connect(self.CONN_STRING)    
+            cursor = conn.cursor()
+            cursor.execute(SQL_GET_ALL_WEBSITES)
+            records = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            return records
+        except Exception as exc:
+            logger.warning('Error selecting website urls : %s', exc)
+            return False
+
+
     def insert_to_sitemaps(self, website_url_value, sitemap_url_value):
         '''
         Function to insert to sitemaps table
@@ -144,6 +170,7 @@ class PostgresqlInterface:
         except Exception as exc:
             logger.warning('Error inserting to table sitemaps : %s', exc)
             return False
+    
     
     def insert_to_pages(self,website_url_value,sitemap_url_value,page_url_value):
         '''
@@ -173,6 +200,7 @@ class PostgresqlInterface:
             logger.warning('Error inserting to table pages : %s', exc)
             return False
     
+
     def select_all_pages(self):
         '''
         Function to get all page URLs from the database
@@ -196,6 +224,7 @@ class PostgresqlInterface:
             logger.warning('Error selecting page urls : %s', exc)
             return False
     
+
     def insert_to_page_info(self,page_url_value,page_html):
         '''
         '''

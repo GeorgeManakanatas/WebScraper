@@ -44,13 +44,13 @@ def get_sitemap_urls(robot_page_content, webpage_url):
 
 def iterate_sitemap_urls(website,sitemap_urls):
     '''
+    Go over all sitemap urls and find the pages 
     '''
-    war_zone_articles = []
-    other_articles = []
+    # TODO: This needs to be completely redone to handle a 2 tier system
     # iterate through each url of the sitemap
     for item in sitemap_urls:
         # be nice to the site and don't spam
-        time.sleep(20)
+        time.sleep(random.randint(1,40))
         logger.info('requesting url : %s',item.strip("'"))
         get_sitemap_page = requests.get(item.strip("'"))
         xml_soup = BeautifulSoup(get_sitemap_page.content, 'xml')
@@ -68,20 +68,6 @@ def iterate_sitemap_urls(website,sitemap_urls):
                 interface.insert_to_pages(website,item,location)
             except Exception as exc:
                 logger.error('Error saving page url to DB: %s', exc)
-
-    # # when done write values to files files
-    # with open('output/war_zone.txt', 'w') as my_file:
-    #     my_file.write('url,date\n')
-    #     for given_tuple in war_zone_articles:
-    #         entry_line = str(given_tuple[0])+','+str(given_tuple[1])+'\n'
-    #         my_file.write(entry_line)
-
-    # with open('output/the_drive.txt', 'w') as my_file:
-    #     my_file.write('url,date\n')
-    #     for given_tuple in other_articles:
-    #         entry_line = str(given_tuple[0])+','+str(given_tuple[1])+'\n'
-    #         my_file.write(entry_line)
-
     return
 
 
