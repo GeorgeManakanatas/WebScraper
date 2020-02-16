@@ -14,26 +14,27 @@ class PostgresqlInterface:
     '''
     All interactions with the Postgresql datbase
     '''
-    def __init__(self, host='localhost', port='5432', dbname='ScraperDB', user='postgres', password='craptop4' ):
+    def __init__(self, host='host_not_set', port='port_not_set', dbname='db_name_not_set', schemaname='schema_not_set', user='user_not_set', password='password_not_set' ):
         '''
         The constructor for PostgresqlInterface class.
-
-        Parametres:
-            host (str): the host ip
-            port (str): the database port
-            dbname (str): the database name
-            user (str): the user name
-            password (str): the user password
                 
         '''
-        self.host = host
-        self.port = port
-        self.dbname = dbname
-        self.user = user
-        self.password = password
+        try:
+            self.host = my_config.config_values['postgresql_connection']['host']
+            self.schemaname = my_config.config_values['postgresql_connection']['schemaname']
+            self.port = my_config.config_values['postgresql_connection']['port']
+            self.dbname = my_config.config_values['postgresql_connection']['dbname'].lower()
+            self.user = my_config.config_values['postgresql_connection']['user']
+            self.password = my_config.config_values['postgresql_connection']['password']
+        except KeyError:
+            self.host = host
+            self.schemaname = schemaname
+            self.port = port
+            self.dbname = dbname.lower()
+            self.user = user
+            self.password = password
         # building the connection string
         self.CONN_STRING = 'host='+self.host+' port='+self.port+' dbname='+self.dbname+' user='+self.user+' password='+self.password
-
 
     def init_postgresql(self):
         '''
@@ -46,14 +47,33 @@ class PostgresqlInterface:
             Boolean: True on success, False if an exception is thrown
         '''
         #
-        SQL_CREATE_SCHEMA = "CREATE SCHEMA scraping_info;"
-        SQL_CEATE_TABLE_WEBSITES = "CREATE TABLE scraping_info.websites (id BIGSERIAL , website_url varchar NULL, has_robots_txt bool NULL, has_sitemap_xml bool NULL, last_scrape date NULL, post_date date NULL, CONSTRAINT websites_pk PRIMARY KEY (id), CONSTRAINT websites_un UNIQUE (website_url));"
-        SQL_CEATE_TABLE_SITEMAPS = "CREATE TABLE scraping_info.sitemaps (id BIGSERIAL , sitemap_url varchar NULL, website BIGSERIAL, CONSTRAINT sitemaps_pk PRIMARY KEY (id), CONSTRAINT sitemaps_un UNIQUE (sitemap_url), CONSTRAINT sitemaps_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id));"
-        SQL_CEATE_TABLE_PAGES = "CREATE TABLE scraping_info.pages (id BIGSERIAL , page_url varchar NULL, website BIGSERIAL, sitemap BIGSERIAL, CONSTRAINT pages_pk PRIMARY KEY (id), CONSTRAINT pages_un UNIQUE (page_url), CONSTRAINT pages_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id), CONSTRAINT pages_fk_1 FOREIGN KEY (sitemap) REFERENCES scraping_info.sitemaps(id));"
-        SQL_CEATE_TABLE_PAGE_INFO = "CREATE TABLE scraping_info.page_info (id BIGSERIAL , page BIGSERIAL, raw_content bytea NULL, parsed_content jsonb NULL, CONSTRAINT page_info_pk PRIMARY KEY (id), CONSTRAINT page_info_fk FOREIGN KEY (page) REFERENCES scraping_info.pages(id));"
-        #
+        SQL_CREATE_DATABASE = "CREATE DATABASE "+self.dbname+";"
+        SQL_CREATE_CONDITIONAL = "SELECT pg_database.datname FROM pg_database WHERE datname =\'"+self.dbname+"\';"
+        SQL_CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS scraping_info;"
+        SQL_CEATE_TABLE_WEBSITES = "CREATE TABLE IF NOT EXISTS scraping_info.websites (id BIGSERIAL , website_url varchar NULL, has_robots_txt bool NULL, has_sitemap_xml bool NULL, last_scrape date NULL, post_date date NULL, CONSTRAINT websites_pk PRIMARY KEY (id), CONSTRAINT websites_un UNIQUE (website_url));"
+        SQL_CEATE_TABLE_SITEMAPS = "CREATE TABLE IF NOT EXISTS scraping_info.sitemaps (id BIGSERIAL , sitemap_url varchar NULL, website BIGSERIAL, CONSTRAINT sitemaps_pk PRIMARY KEY (id), CONSTRAINT sitemaps_un UNIQUE (sitemap_url), CONSTRAINT sitemaps_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id));"
+        SQL_CEATE_TABLE_PAGES = "CREATE TABLE IF NOT EXISTS scraping_info.pages (id BIGSERIAL , page_url varchar NULL, website BIGSERIAL, sitemap BIGSERIAL, CONSTRAINT pages_pk PRIMARY KEY (id), CONSTRAINT pages_un UNIQUE (page_url), CONSTRAINT pages_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id), CONSTRAINT pages_fk_1 FOREIGN KEY (sitemap) REFERENCES scraping_info.sitemaps(id));"
+        SQL_CEATE_TABLE_PAGE_INFO = "CREATE TABLE IF NOT EXISTS scraping_info.page_info (id BIGSERIAL , page BIGSERIAL, raw_content bytea NULL, parsed_content jsonb NULL, CONSTRAINT page_info_pk PRIMARY KEY (id), CONSTRAINT page_info_fk FOREIGN KEY (page) REFERENCES scraping_info.pages(id));"
+        # Creating the database
         try:
-            conn = psycopg2.connect(self.CONN_STRING)    
+            # when initializing use connection string without db name
+            CONN_STRING_ONE= 'host='+self.host+' port='+self.port+' user='+self.user+' password='+self.password
+            # logger.info('SQL is : %s', SQL_CREATE_CONDITIONAL)
+            conn = psycopg2.connect(CONN_STRING_ONE) # connecting to postgres without specific database
+            conn.autocommit = True # needed to create database if it isn't found
+            cursor = conn.cursor()
+            cursor.execute(SQL_CREATE_CONDITIONAL) # looking for database
+            condition = cursor.fetchall()
+            if len(condition) == 0:
+                cursor.execute(SQL_CREATE_DATABASE) # if not found create it
+            conn.commit()
+            conn.close()
+        except Exception as exc:
+            logger.warning('Error creating database : %s', exc)
+            return False
+        # Creating the database schema and tables
+        try:
+            conn = psycopg2.connect(self.CONN_STRING) # connectingto specific database   
             cursor = conn.cursor()
             cursor.execute(SQL_CREATE_SCHEMA)
             cursor.execute(SQL_CEATE_TABLE_WEBSITES)
@@ -62,11 +82,11 @@ class PostgresqlInterface:
             cursor.execute(SQL_CEATE_TABLE_PAGE_INFO)
             conn.commit()
             conn.close()
-            logger.info('Database initiated')
         except Exception as exc:
-            logger.warning('Error initiating database : %s', exc)
+            logger.warning('Error setting database : %s', exc)
             return False
-        #
+        # 
+        logger.info('Database initiated')
         return True
 
 

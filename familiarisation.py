@@ -11,15 +11,18 @@ cities_dict = {"Antwerp":"https://weather.com/weather/today/l/BEXX0539:1:BE", \
         "Mol":"https://weather.com/weather/today/l/69e6ef05c2719d0dc9545bba8797a8cf95a8b71ca9e3defa17c67e881627f07a",\
         "Wageningen":"https://weather.com/weather/today/l/4e606702b02d3d535950b8512a4d51fdf491481a810e74da96cfa77cfc15d5b0",\
         "Athens":"https://weather.com/weather/today/l/GRXX0004:1:GR"}
-days_dict = {"today":"daypart-0","tommorow":"daypart-1","day_after":"daypart-2"}
+days_dict = {"today":"daypart-0","tommorow":"daypart-2","day_after":"daypart-4"}
 info_dict = {}
 # looping over cities
 for city, url in cities_dict.items():
     #
     day_dict = {}
     # timegap between requests to the site
+    print('sleeping for 20')
     time.sleep(20)
-    page = requests.get(url)
+    print('making request')
+    page = requests.get(url, verify=False)
+    print('parsing reply')
     weather_soup = BeautifulSoup(page.content, 'html.parser')
     # looping through the days
     for day, html_elem_name in days_dict.items():
