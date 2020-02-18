@@ -20,7 +20,7 @@ class PostgresqlInterface:
                 
         '''
         try:
-            logger.info('postgresql connection : %s', my_config.config_values['postgresql_connection'])
+            # logger.info('postgresql connection : %s', my_config.config_values['postgresql_connection'])
             self.host = my_config.config_values['postgresql_connection']['host']
             self.schemaname = my_config.config_values['postgresql_connection']['schemaname']
             self.port = my_config.config_values['postgresql_connection']['port']

@@ -3,13 +3,14 @@ import logging
 import re
 import random
 import time
+from bs4 import BeautifulSoup
 import urllib.robotparser
 from robots.my_robots import get_page, check_content, check_keywords
 from database.my_database import PostgresqlInterface
 from config import my_config
 from logger.custom_logger import setup_custom_logger
 from sitemaps.my_sitemap import iterate_sitemap_urls, get_all_sitemap_urls
-from pages.my_pages import iterate_page_urls
+from pages.my_pages import recursive_search_in_sitemap
 
 # Reading config file into global variable
 my_config.config_file()
@@ -57,6 +58,20 @@ if my_config.config_values['scrape_sitemaps']:
             logger.info('New sitemap urls found')
         else:
             logger.info('No new sitemap urls')
+
+
+if my_config.config_values['scrape_pages']:
+    # database call to get list of sitemap URLs
+    sitemaps_info = interface.select_all_sitemaps()
+    random.shuffle(sitemaps_info) # shuffle the sitemaps
+    # read the sitemaps one at a time
+    for table_row in sitemaps_info:
+        print('--')
+        if 'theintercept' in table_row[1]:
+            print('!!')
+            recursive_search_in_sitemap(table_row[1])
+
+    
 
 
 if my_config.config_values['scrape_raw_data']:

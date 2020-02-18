@@ -1,6 +1,7 @@
 import logging
 import csv
 import requests
+import random
 import time
 from logger.custom_logger import setup_custom_logger
 from bs4 import BeautifulSoup
@@ -42,3 +43,34 @@ def page_article_details(article_url):
     #
     # logger.info('information!! : %s',data_string)
     return temp_entry
+
+def get_page_urls(main_list):
+    # random wait period
+    time.sleep(random.randint(1,60))
+    # get page
+    page_cont = requests.get(main_list[0])
+    # parse page
+    page_soup = BeautifulSoup(page_cont.content, 'xml')
+    all_elements = page_soup.findAll("loc")
+    # cleanup results
+    all_urls = []
+    for element in all_elements:
+        all_urls.append(element.getText())
+    #
+    return all_urls
+
+
+def recursive_search_in_sitemap(sitemap_url_from_db):
+    main_list = []
+    main_list.append(sitemap_url_from_db)
+    while len(main_list) > 0:
+        if 'sitemap' in str(main_list[0]):
+            # get page urls and append to main list
+            main_list = main_list + get_page_urls(main_list)
+            del main_list[0]
+            logger.info('Sitemap found list lenght : %s',len(main_list))
+        else:
+            #
+            logger.info('list lenght : %s',len(main_list))
+            logger.info('Saving %s to db',main_list[0])
+            del main_list[0]
