@@ -62,14 +62,14 @@ if my_config.config_values['scrape_sitemaps']:
 
 if my_config.config_values['scrape_pages']:
     # database call to get list of sitemap URLs
-    sitemaps_info = interface.select_all_sitemaps()
+    sitemaps_info = interface.select_sitemaps_and_websites()
     random.shuffle(sitemaps_info) # shuffle the sitemaps
     # read the sitemaps one at a time
     for table_row in sitemaps_info:
-        print('--')
-        if 'theintercept' in table_row[1]:
-            print('!!')
-            recursive_search_in_sitemap(table_row[1])
+        page_url_string = table_row[1]
+        website_url_string = table_row[4]
+        logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
+        recursive_search_in_sitemap(page_url_string, website_url_string)
 
     
 

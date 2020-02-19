@@ -3,10 +3,13 @@ import csv
 import requests
 import random
 import time
-from logger.custom_logger import setup_custom_logger
 from bs4 import BeautifulSoup
+from logger.custom_logger import setup_custom_logger
+from database.my_database import PostgresqlInterface
 #
 logger = logging.getLogger('scraping')
+# initialize the postgres interface
+interface = PostgresqlInterface()
 #
 def iterate_page_urls(file_path):
     # initialize the array
@@ -60,7 +63,7 @@ def get_page_urls(main_list):
     return all_urls
 
 
-def recursive_search_in_sitemap(sitemap_url_from_db):
+def recursive_search_in_sitemap(sitemap_url_from_db, website_url_from_db):
     main_list = []
     main_list.append(sitemap_url_from_db)
     while len(main_list) > 0:
@@ -71,6 +74,6 @@ def recursive_search_in_sitemap(sitemap_url_from_db):
             logger.info('Sitemap found list lenght : %s',len(main_list))
         else:
             #
-            logger.info('list lenght : %s',len(main_list))
-            logger.info('Saving %s to db',main_list[0])
+            logger.info('Saving %s to db, list lenght : %s',main_list[0],str(len(main_list)))
+            interface.insert_to_pages(website_url_from_db, sitemap_url_from_db, main_list[0])
             del main_list[0]

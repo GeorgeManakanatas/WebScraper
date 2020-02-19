@@ -189,6 +189,31 @@ class PostgresqlInterface:
             logger.warning('Error selecting website urls : %s', exc)
             return False
 
+    def select_sitemaps_and_websites(self):
+        '''
+        Function to get all sitemap URLs and associated website URLs
+
+        Parameters:
+            none
+
+        Returns:
+            List , Bool: The records if success, False if an exception is thrown
+        '''
+        # SQL_GET_SITEMAPS_AND_WEBSITES = "SELECT sitemaps.*, websites.website_url FROM scraping_info.sitemaps LEFT JOIN websites.website_url ON sitemaps.website = websites.id;"
+        SQL_GET_SITEMAPS_AND_WEBSITES = "SELECT * FROM scraping_info.sitemaps LEFT JOIN scraping_info.websites ON sitemaps.website = websites.id;"
+        try:
+            conn = psycopg2.connect(self.CONN_STRING)    
+            cursor = conn.cursor()
+            cursor.execute(SQL_GET_SITEMAPS_AND_WEBSITES)
+            records = cursor.fetchall()
+            conn.commit()
+            conn.close()
+            return records
+        except Exception as exc:
+            logger.warning('Error selecting sitemaps and associated URLs : %s', exc)
+            return False
+
+
     def insert_to_sitemaps(self, website_url_value, sitemap_url_value):
         '''
         Function to insert to sitemaps table
