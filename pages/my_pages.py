@@ -48,15 +48,23 @@ def page_article_details(article_url):
     return temp_entry
 
 def get_page_urls(main_list):
+    all_urls = []
     # random wait period
     time.sleep(random.randint(1,60))
-    # get page
-    page_cont = requests.get(main_list[0])
-    # parse page
-    page_soup = BeautifulSoup(page_cont.content, 'xml')
-    all_elements = page_soup.findAll("loc")
+    try:
+        # get page
+        page_cont = requests.get(main_list[0])
+    except Exception as exc:
+            logger.error('Error connecting to page : %s', exc)
+            return all_urls
+    try:
+        # parse page
+        page_soup = BeautifulSoup(page_cont.content, 'xml')
+        all_elements = page_soup.findAll("loc")
+    except Exception as exc:
+        logger.error('Error parsing page contents : %s', exc)
+        return all_urls
     # cleanup results
-    all_urls = []
     for element in all_elements:
         all_urls.append(element.getText())
     #
