@@ -68,8 +68,9 @@ if my_config.config_values['scrape_pages']:
     for table_row in sitemaps_info:
         page_url_string = table_row[1]
         website_url_string = table_row[4]
-        logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
-        recursive_search_in_sitemap(page_url_string, website_url_string)
+        if 'https://medium.com' in table_row:
+            logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
+            recursive_search_in_sitemap(page_url_string, website_url_string)
 
     
 
