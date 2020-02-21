@@ -53,10 +53,14 @@ class PostgresqlInterface:
         SQL_CREATE_DATABASE = "CREATE DATABASE "+self.dbname+";"
         SQL_CREATE_CONDITIONAL = "SELECT pg_database.datname FROM pg_database WHERE datname =\'"+self.dbname+"\';"
         SQL_CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS scraping_info;"
+        
         SQL_CEATE_TABLE_WEBSITES = "CREATE TABLE IF NOT EXISTS scraping_info.websites (id BIGSERIAL , website_url varchar NULL, has_robots_txt bool NULL, has_sitemap_xml bool NULL, last_scrape date NULL, post_date date NULL, CONSTRAINT websites_pk PRIMARY KEY (id), CONSTRAINT websites_un UNIQUE (website_url));"
         SQL_CEATE_TABLE_SITEMAPS = "CREATE TABLE IF NOT EXISTS scraping_info.sitemaps (id BIGSERIAL , sitemap_url varchar NULL, website BIGSERIAL, CONSTRAINT sitemaps_pk PRIMARY KEY (id), CONSTRAINT sitemaps_un UNIQUE (sitemap_url), CONSTRAINT sitemaps_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id));"
         SQL_CEATE_TABLE_PAGES = "CREATE TABLE IF NOT EXISTS scraping_info.pages (id BIGSERIAL , page_url varchar NULL, website BIGSERIAL, sitemap BIGSERIAL, CONSTRAINT pages_pk PRIMARY KEY (id), CONSTRAINT pages_un UNIQUE (page_url), CONSTRAINT pages_fk FOREIGN KEY (website) REFERENCES scraping_info.websites(id), CONSTRAINT pages_fk_1 FOREIGN KEY (sitemap) REFERENCES scraping_info.sitemaps(id));"
         SQL_CEATE_TABLE_PAGE_INFO = "CREATE TABLE IF NOT EXISTS scraping_info.page_info (id BIGSERIAL , page BIGSERIAL, raw_content bytea NULL, parsed_content jsonb NULL, CONSTRAINT page_info_pk PRIMARY KEY (id), CONSTRAINT page_info_fk FOREIGN KEY (page) REFERENCES scraping_info.pages(id));"
+
+        SQL_CEATE_TABLE_PRODUCTS = "CREATE TABLE IF NOT EXISTS scraping_info.products (id BIGSERIAL , name varchar NULL, url varchar NULL, target_price smallint NULL, target_discount smallint NULL, price_id varchar NULL, price_class varchar NULL, discount_id varchar NULL, discount_class varchar NULL, CONSTRAINT products_pk PRIMARY KEY (id), CONSTRAINT products_un UNIQUE (url), CONSTRAINT products_un_1 UNIQUE (name));"
+        SQL_CEATE_TABLE_PRICES = "CREATE TABLE IF NOT EXISTS scraping_info.prices (id BIGSERIAL , time timestamp NULL, product_id BIGSERIAL, price varchar NULL, discount varchar NULL, CONSTRAINT prices_pk PRIMARY KEY (id), CONSTRAINT prices_fk FOREIGN KEY (product_id) REFERENCES scraping_info.products(id));"
         # Creating the database
         try:
             # when initializing use connection string without db name
@@ -83,6 +87,8 @@ class PostgresqlInterface:
             cursor.execute(SQL_CEATE_TABLE_SITEMAPS)
             cursor.execute(SQL_CEATE_TABLE_PAGES)
             cursor.execute(SQL_CEATE_TABLE_PAGE_INFO)
+            cursor.execute(SQL_CEATE_TABLE_PRODUCTS)
+            cursor.execute(SQL_CEATE_TABLE_PRICES)
             conn.commit()
             conn.close()
         except Exception as exc:
