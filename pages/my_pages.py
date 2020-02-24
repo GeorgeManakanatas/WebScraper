@@ -21,7 +21,7 @@ def iterate_page_urls(file_path):
         # get info from each URL
         for row in file_reader:
             # spacing the time
-            time.sleep(20)
+            time.sleep(random.randint(10,60))
             logger.info('going after URL : %s',row['url'])
             article_info = page_article_details(row['url'])
             articles_with_details.append(article_info)
@@ -50,7 +50,7 @@ def page_article_details(article_url):
 def get_page_urls(request_url):
     all_urls = []
     # random wait period
-    time.sleep(random.randint(1,60))
+    time.sleep(random.randint(10,60))
     try:
         # get page
         page_cont = requests.get(request_url)
