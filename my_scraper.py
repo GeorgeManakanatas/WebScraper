@@ -3,6 +3,7 @@ import logging
 import re
 import random
 import time
+import json
 from bs4 import BeautifulSoup
 import urllib.robotparser
 from robots.my_robots import get_page, check_content, check_keywords
@@ -68,10 +69,9 @@ if my_config.config_values['scrape_pages']:
     for table_row in sitemaps_info:
         page_url_string = table_row[1]
         website_url_string = table_row[4]
-        logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
-        recursive_search_in_sitemap(page_url_string, website_url_string)
-
-
+        if 'https://medium.com' in table_row:
+            logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
+            recursive_search_in_sitemap(page_url_string, website_url_string)
 
 
 if my_config.config_values['scrape_raw_data']:
@@ -83,10 +83,25 @@ if my_config.config_values['scrape_raw_data']:
         # getting page
         logger.info('getting page : %s',id_page_result[1])
         # sleep random time
-        time.sleep(random.randint(1,60))
+        time.sleep(random.randint(10,60))
         page_content, page_found = get_page(id_page_result[1])
         try:
             logger.info('saving page data: %s',id_page_result[1])
             interface.insert_to_page_info(id_page_result[1],page_content.encode('utf-8'))
         except Exception as exc:
             logger.warning('Error waving page data : %s', exc)
+if my_config.config_values['check_product_prices']:
+    logger.info('Getting product prices')
+    # read configuration file
+    with open('config/tracked_products_list.json', 'r') as prods:
+        products_config = json.load(prods)
+    #
+    for product in products_config['items_list']:
+        time.sleep(random.randint(10,60))
+        page = requests.get(product['url'],headers={"User-Agent":"Defined"})
+        logger.info(str(product['price_class']))
+        logger.info(str(page))
+        product_soup = BeautifulSoup(page.content, 'html.parser')
+        price = product_soup.find('span', class_=product['price_class'])
+        logger.info('The price is: '+str(price))
+            

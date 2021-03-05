@@ -19,7 +19,7 @@ for city, url in cities_dict.items():
     day_dict = {}
     # timegap between requests to the site
     print('sleeping for 20')
-    time.sleep(20)
+    time.sleep(random.randint(10,60))
     print('making request')
     page = requests.get(url, verify=False)
     print('parsing reply')

@@ -21,7 +21,7 @@ def iterate_page_urls(file_path):
         # get info from each URL
         for row in file_reader:
             # spacing the time
-            time.sleep(20)
+            time.sleep(random.randint(10,60))
             logger.info('going after URL : %s',row['url'])
             article_info = page_article_details(row['url'])
             articles_with_details.append(article_info)
@@ -47,13 +47,13 @@ def page_article_details(article_url):
     # logger.info('information!! : %s',data_string)
     return temp_entry
 
-def get_page_urls(main_list):
+def get_page_urls(request_url):
     all_urls = []
     # random wait period
-    time.sleep(random.randint(1,60))
+    time.sleep(random.randint(10,60))
     try:
         # get page
-        page_cont = requests.get(main_list[0])
+        page_cont = requests.get(request_url)
     except Exception as exc:
             logger.error('Error connecting to page : %s', exc)
             return all_urls
@@ -61,6 +61,7 @@ def get_page_urls(main_list):
         # parse page
         page_soup = BeautifulSoup(page_cont.content, 'xml')
         all_elements = page_soup.findAll("loc")
+        logger.info('found %s loc elements',str(len(all_elements)))
     except Exception as exc:
         logger.error('Error parsing page contents : %s', exc)
         return all_urls
@@ -75,13 +76,14 @@ def recursive_search_in_sitemap(sitemap_url_from_db, website_url_from_db):
     main_list = []
     main_list.append(sitemap_url_from_db)
     while len(main_list) > 0:
-        if 'sitemap' in str(main_list[0]):
+        request_url = str(main_list[-1])
+        if 'sitemap' in request_url:
             # get page urls and append to main list
-            main_list = main_list + get_page_urls(main_list)
-            del main_list[0]
-            logger.info('Sitemap found list lenght : %s',len(main_list))
+            logger.info('Sitemap found in %s , list lenght is : %s', main_list[-1], len(main_list))
+            del main_list[-1]
+            main_list = main_list + get_page_urls(request_url)
         else:
             #
-            logger.info('Saving %s to db, list lenght : %s',main_list[0],str(len(main_list)))
-            interface.insert_to_pages(website_url_from_db, sitemap_url_from_db, main_list[0])
-            del main_list[0]
+            logger.info('Saving %s to db, list lenght : %s',request_url,str(len(main_list)))
+            interface.insert_to_pages(website_url_from_db, sitemap_url_from_db, request_url.encode)
+            del main_list[-1]

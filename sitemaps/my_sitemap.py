@@ -87,7 +87,7 @@ def iterate_sitemap_urls(website,sitemap_urls):
     # iterate through each url of the sitemap
     for item in sitemap_urls:
         # be nice to the site and don't spam
-        time.sleep(random.randint(1,40))
+        time.sleep(random.randint(10,60))
         logger.info('requesting url : %s',item.strip("'"))
         get_sitemap_page = requests.get(item.strip("'"))
         xml_soup = BeautifulSoup(get_sitemap_page.content, 'xml')

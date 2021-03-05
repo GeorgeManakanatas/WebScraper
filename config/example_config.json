@@ -4,6 +4,7 @@
     "scrape_sitemaps":0,
     "scrape_pages":0,
     "scrape_raw_data":0,
+    "check_product_prices":0,
     "postgresql_connection":{
         "host":"127.0.0.1",
         "port":"1234",

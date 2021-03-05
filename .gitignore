@@ -129,3 +129,4 @@ output/
 
 # Configuration files
 /config/config.json
+/config/tracked_products_list.json
