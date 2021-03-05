@@ -37,7 +37,7 @@ if my_config.config_values['scrape_websites']:
         # TODO: redo this to work with urllib.robotparser
         keyword_results = check_keywords(robot_page_content)
         # save to database
-        # TODO: add column for page_found 
+        # TODO: add column for page_found
         try:
             interface.insert_to_websites(website_url=url, has_robots_txt=robot_page_found, has_sitemap_xml=keyword_results['Sitemap'])
         except Exception as exc:
@@ -54,7 +54,7 @@ if my_config.config_values['scrape_sitemaps']:
         # look for new sitemap URLs and save them in databasee
         new_urls_found = get_all_sitemap_urls(website_info)
         # log the output
-        if new_urls_found: 
+        if new_urls_found:
             logger.info('New sitemap urls found')
         else:
             logger.info('No new sitemap urls')
@@ -71,7 +71,7 @@ if my_config.config_values['scrape_pages']:
         logger.info('-----------------------------------------------\n\n %s         %s \n\n-----------------------------------------------', page_url_string, website_url_string)
         recursive_search_in_sitemap(page_url_string, website_url_string)
 
-    
+
 
 
 if my_config.config_values['scrape_raw_data']:
@@ -90,5 +90,3 @@ if my_config.config_values['scrape_raw_data']:
             interface.insert_to_page_info(id_page_result[1],page_content.encode('utf-8'))
         except Exception as exc:
             logger.warning('Error waving page data : %s', exc)
-            
-            
