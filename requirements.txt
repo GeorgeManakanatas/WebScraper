@@ -6,7 +6,7 @@ chardet==3.0.4
 cryptography==2.8
 idna==2.8
 keyring==20.0.1
-lxml==4.5.0
+lxml==4.6.3
 psycopg2==2.8.4
 ptyprocess==0.6.0
 pycparser==2.19
