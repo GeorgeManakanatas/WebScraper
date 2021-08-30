@@ -19,6 +19,6 @@ SecretStorage==3.3.1
 six==1.14.0
 soupsieve==1.9.5
 SQLAlchemy==1.3.13
-urllib3==1.25.11
+urllib3==1.26.5
 win-inet-pton==1.1.0
 wincertstore==0.2
