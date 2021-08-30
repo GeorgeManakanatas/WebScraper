@@ -105,6 +105,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+bin/
+!bin/.gitkeep
 
 # Spyder project settings
 .spyderproject
@@ -129,6 +131,7 @@ output/*
 !output/.gitkeep
 
 # Configuration files
+
 /config/config.json
 /config/tracked_products_list.json
 pyvenv.cfg
