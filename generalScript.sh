@@ -42,7 +42,8 @@ export_postgresql(){
 }
 import_dump_to_postgresql(){
   dump=$(zenity --entry --title="Dump file" --text="Dump file name" );
-  cat $dump | docker exec -i your-db-container psql -U postgres
+  container=$(zenity --entry --title="Postgres name" --text="Name of container" );
+  cat $dump | docker exec -i $container psql -U postgres
 }
 start_container(){
  # popup for user to give the name of the container to be started and starts it
