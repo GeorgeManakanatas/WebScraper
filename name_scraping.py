@@ -28,7 +28,7 @@ if my_config.config_values['get_random_belgians']:
     # initialize array
     full = []
     # get website from config
-    for url in my_config.config_values['website_urls']:
+    for url in my_config.config_values['name_generator_url']:
         #logger.info('Looking at : %s',url)
         # repeat for sample size
         for i in range (0, PERSON_SAMPLE_SIZE):
