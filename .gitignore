@@ -105,6 +105,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+bin/
+!bin/.gitkeep
 
 # Spyder project settings
 .spyderproject
@@ -125,8 +127,12 @@ dmypy.json
 .pyre/
 
 # Results files
-output/
+output/*
+!output/.gitkeep
 
 # Configuration files
+
 /config/config.json
 /config/tracked_products_list.json
+pyvenv.cfg
+dump_30-08-2021_10_43_06.sql

@@ -59,11 +59,30 @@ def get_all_sitemap_urls(website_info):
     for webpage_url in website_info:
         robots_web_url = webpage_url[1] + '/robots.txt'
         robot_page_content, robot_page_found = get_page(robots_web_url)
-        logger.info('robot_page_found : %s',str(robot_page_found))
+        logger.info('robot_page_found : %s , %s',str(robot_page_found),str(robots_web_url))
         # if robots page found
         if robot_page_found:
             # get list of all sitemap urls in a specific robots page
-            list_of_urls = all_sitemap_urls_from_robots(robot_page_content)
+            list_of_robot_page_urls = all_sitemap_urls_from_robots(robot_page_content)
+            # check if the robot page urls have nested sitemaps
+            for url in list_of_robot_page_urls:
+                logger.info('Getting : %s',str(url))
+                page = requests.get(url)
+                # logger.info('page : %s',str(page.text))
+                soup = BeautifulSoup(page.text, 'html.parser')
+                sitemapindex = soup.find("sitemapindex")
+                # logger.info('len(str(sitemapindex)) : %s',str(len(str(sitemapindex))))
+                # logger.info('sitemapindex : %s',str(sitemapindex))
+                if sitemapindex is None:
+                    logger.info('No sitemaps found for : %s',str(url))
+                else:
+                    sitemaps = sitemapindex.find_all("loc")
+                    list_of_urls = []
+                    if len(sitemaps) > 0:
+                        # get all urls
+                        for entry in sitemaps:
+                            logger.info('Adding %s to list',entry.getText())
+                            list_of_urls.append(entry.getText())
             # loop through urls and check if they already exist
             for url in list_of_urls:
                 # check if url exists
@@ -78,33 +97,4 @@ def get_all_sitemap_urls(website_info):
             logger.info('Not getting sitemap info, because %s not retrieved',robots_web_url)
     # get new list and return that if any where added
     return new_db_entries
-
-def iterate_sitemap_urls(website,sitemap_urls):
-    '''
-    Go over all sitemap urls and find the pages 
-    '''
-    # TODO: This needs to be completely redone to handle a 2 tier system
-    # iterate through each url of the sitemap
-    for item in sitemap_urls:
-        # be nice to the site and don't spam
-        time.sleep(random.randint(10,60))
-        logger.info('requesting url : %s',item.strip("'"))
-        get_sitemap_page = requests.get(item.strip("'"))
-        xml_soup = BeautifulSoup(get_sitemap_page.content, 'xml')
-        get_all_listed_urls = xml_soup.find_all('url')
-        # randomize this list as well
-        random.shuffle(get_all_listed_urls)
-        # iterate through that list and get the war zone articles
-        for article in get_all_listed_urls:
-            try:     
-                location = article.find('loc').getText()
-                last_mod = article.find('lastmod').getText()
-            except Exception as exc:
-                logger.error('Error parsing location and date: %s', exc)
-            try:
-                interface.insert_to_pages(website,item,location)
-            except Exception as exc:
-                logger.error('Error saving page url to DB: %s', exc)
-    return
-
 
