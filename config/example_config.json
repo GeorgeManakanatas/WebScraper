@@ -5,6 +5,7 @@
     "scrape_pages":0,
     "scrape_raw_data":0,
     "check_product_prices":0,
+    "get_random_belgians":0,
     "postgresql_connection":{
         "host":"127.0.0.1",
         "port":"1234",
@@ -18,5 +19,6 @@
         "filename":"scraping.log"
     },
     "robots_keywords":["Sitemap","Allow","Disallow","User-agent"],
-    "website_urls":["https://www.somewebsite.com","https://someotherwebsite.com","https://athirdwebsite.com"]
+    "website_urls":["https://www.somewebsite.com","https://someotherwebsite.com","https://athirdwebsite.com"],
+    "name_generator_url":"http://namegenerators.org/fake-name-generator-bg/"
 }
