@@ -12,8 +12,6 @@ from robots.my_robots import get_page, check_content, check_keywords
 from database.my_database import PostgresqlInterface
 from config import my_config
 from logger.custom_logger import setup_custom_logger
-from sitemaps.my_sitemap import iterate_sitemap_urls, get_all_sitemap_urls
-from pages.my_pages import recursive_search_in_sitemap
 
 # Reading config file into global variable
 my_config.config_file()
@@ -29,7 +27,7 @@ if my_config.config_values['get_random_belgians']:
     full = []
     # get website from config
     for url in my_config.config_values['name_generator_url']:
-        #logger.info('Looking at : %s',url)
+        logger.info('Looking at : %s',url)
         # repeat for sample size
         for i in range (0, PERSON_SAMPLE_SIZE):
             content = {}
@@ -38,7 +36,7 @@ if my_config.config_values['get_random_belgians']:
             # get the page
             page_content, page_found = get_page(url)
             # page_content=requests.get(url)
-            # logger.info('page_content type : %s',type(page_content))
+            logger.info('page_content type : %s',type(page_content))
             tree = html.fromstring(page_content)
             #
             address = tree.xpath('/html/body/div[3]/div[1]/div[7]/div[12]//text()')

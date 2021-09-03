@@ -1,6 +1,6 @@
 {   
     "initialize_db":0,
-    "scrape_websites":1,
+    "scrape_websites":0,
     "scrape_sitemaps":0,
     "scrape_pages":0,
     "scrape_raw_data":0,

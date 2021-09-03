@@ -1,0 +1,45 @@
+{
+    "check_frequency_days":"",
+    "items_list":[
+        {
+            "name":"Caterpillar Colorado P720263, Bottes & Bottines Classiques Homme",
+            "url":"https://www.amazon.fr/gp/product/B01ITGIM8S/ref=ppx_yo_dt_b_search_asin_title?th=1&psc=1",
+            "target_price":"60,00",
+            "target_discount":"30%",
+            "price_id":"priceblock_ourprice",
+            "price_class":"a-size-medium a-color-price priceBlockBuyingPriceString",
+            "discount_id":"",
+            "discount_class":""
+        },
+        {
+            "name":"Cat Footwear Mythos, Sneakers Basses Homme",
+            "url":"https://www.amazon.fr/dp/B01MRVMHTL/?coliid=I3H8R6H3XU9EMC&colid=262DBZTCZNIS8&psc=1&ref_=lv_ov_lig_dp_it",
+            "target_price":"50,00",
+            "target_discount":"50%",
+            "price_id":"priceblock_ourprice",
+            "price_class":"a-size-medium a-color-price priceBlockBuyingPriceString",
+            "discount_id":"",
+            "discount_class":""
+        },
+        {
+            "name":"Lower East T-shirt col rond Homme, Lot de 5",
+            "url":"https://www.amazon.fr/dp/B01DBTPYKC/?coliid=I1R0WZYJQQGW02&colid=262DBZTCZNIS8&psc=1&ref_=lv_ov_lig_dp_it",
+            "target_price":"20,00",
+            "target_discount":"",
+            "price_id":"priceblock_ourprice",
+            "price_class":"a-size-medium a-color-price priceBlockBuyingPriceString",
+            "discount_id":"",
+            "discount_class":""
+        },
+        {
+            "name":"Lower East Boxer Retro Homme, Lot de 6 et 10",
+            "url":"https://www.amazon.fr/dp/B07QS3MBBZ/?coliid=I3OLMHRTAU5RJT&colid=262DBZTCZNIS8&psc=1&ref_=lv_ov_lig_dp_it",
+            "target_price":"20,00",
+            "target_discount":"",
+            "price_id":"priceblock_ourprice",
+            "price_class":"a-size-medium a-color-price priceBlockBuyingPriceString",
+            "discount_id":"",
+            "discount_class":""
+        }
+    ]
+}

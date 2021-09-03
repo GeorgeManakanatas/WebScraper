@@ -5,6 +5,7 @@ import json
 from config import my_config
 from logger.custom_logger import setup_custom_logger
 from database.my_database import PostgresqlInterface
+from bs4 import BeautifulSoup
 
 # Reading config file into global variable
 my_config.config_file()
