@@ -8,7 +8,7 @@ cryptography==39.0.1
 idna==2.8
 jeepney==0.7.1
 keyring==20.0.1
-lxml==4.6.3
+lxml==4.9.1
 psycopg2-binary==2.8.4
 ptyprocess==0.6.0
 pycparser==2.19
